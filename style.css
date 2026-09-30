@@ -174,8 +174,35 @@
           <div class="sub-panel online-box">
             <h3>Online</h3>
             <div id="onlineStatus">Offline mode ready.</div>
-            <button id="friendBtn" class="primary-btn small-btn">Add Friend</button>
-            <button id="chatBtn" class="secondary-btn small-btn">Open Chat</button>
+            <button id="queueBtn" class="primary-btn small-btn">Queue Match</button>
+            <button id="friendBtn" class="secondary-btn small-btn">Add Friend</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel online-panel">
+        <div class="panel-header">
+          <h2>Friends & Chat</h2>
+        </div>
+
+        <div class="online-grid">
+          <div class="terminal-box">
+            <div class="online-label">Your Friend Code</div>
+            <div id="friendCodeText" class="friend-code">Loading...</div>
+            <div class="inline-input-row">
+              <input id="friendCodeInput" type="text" placeholder="Enter friend code" />
+              <button id="addFriendBtn" class="secondary-btn">Add</button>
+            </div>
+            <div id="friendsList" class="friends-list"></div>
+          </div>
+
+          <div class="terminal-box">
+            <div id="chatHeader" class="chat-header">Select a friend to chat</div>
+            <div id="chatMessages" class="chat-messages"></div>
+            <div class="inline-input-row chat-row">
+              <input id="chatInput" type="text" placeholder="Send a message..." />
+              <button id="sendChatBtn" class="secondary-btn">Send</button>
+            </div>
           </div>
         </div>
       </section>
