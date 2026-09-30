@@ -1,704 +1,877 @@
-const rarityOrder = ["common", "rare", "epic", "legendary", "mythic"];
-const rarityWeights = { common: 58, rare: 25, epic: 11, legendary: 4, mythic: 2 };
-const rarityBoost = { common: 0, rare: 12, epic: 24, legendary: 38, mythic: 54 };
+:root {
+  --bg-1: #050b14;
+  --bg-2: #101a2d;
+  --panel: rgba(12, 22, 34, 0.9);
+  --panel-alt: rgba(22, 36, 55, 0.95);
+  --line: rgba(148, 163, 184, 0.18);
+  --text: #edf6ff;
+  --muted: #a4b7d4;
+  --primary: #fbbf24;
+  --secondary: #38bdf8;
+  --danger: #ef4444;
+  --good: #22c55e;
+  --shadow: rgba(0, 0, 0, 0.35);
+  --common: #d1d5db;
+  --rare: #60a5fa;
+  --epic: #a78bfa;
+  --legendary: #fbbf24;
+  --mythic: #f472b6;
+}
 
-const allFighters = [
-  { id: "freddy", name: "Freddy Fazbear", universe: "Five Nights at Freddy's", rarity: "common", health: 105, attack: 16, style: "slash", move: "Slash" },
-  { id: "chica", name: "Chica", universe: "Five Nights at Freddy's", rarity: "common", health: 96, attack: 15, style: "dash", move: "Rapid Bite" },
-  { id: "bonnie", name: "Bonnie", universe: "Five Nights at Freddy's", rarity: "rare", health: 110, attack: 18, style: "power", move: "Crushing Hook" },
-  { id: "foxy", name: "Foxy", universe: "Five Nights at Freddy's", rarity: "rare", health: 104, attack: 19, style: "speed", move: "Pirate Rush" },
-  { id: "golden-freddy", name: "Golden Freddy", universe: "Five Nights at Freddy's", rarity: "legendary", health: 125, attack: 26, style: "spectral", move: "Phantom Burst" },
+* {
+  box-sizing: border-box;
+}
 
-  { id: "iron-man", name: "Iron Man", universe: "Marvel", rarity: "rare", health: 108, attack: 20, style: "tech", move: "Repulsor Beam" },
-  { id: "captain-america", name: "Captain America", universe: "Marvel", rarity: "common", health: 118, attack: 18, style: "power", move: "Shield Slam" },
-  { id: "spider-man", name: "Spider-Man", universe: "Marvel", rarity: "epic", health: 112, attack: 24, style: "speed", move: "Web Combo" },
-  { id: "hulk", name: "Hulk", universe: "Marvel", rarity: "legendary", health: 138, attack: 28, style: "power", move: "Gamma Smash" },
-  { id: "thor", name: "Thor", universe: "Marvel", rarity: "epic", health: 122, attack: 25, style: "lightning", move: "Stormbreaker Strike" },
+html, body {
+  margin: 0;
+  min-height: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+  background: radial-gradient(circle at top, #13243d 0%, var(--bg-1) 35%, #040914 100%);
+  color: var(--text);
+}
 
-  { id: "batman", name: "Batman", universe: "DC", rarity: "rare", health: 116, attack: 22, style: "precision", move: "Batarang Rain" },
-  { id: "superman", name: "Superman", universe: "DC", rarity: "legendary", health: 132, attack: 30, style: "power", move: "Solar Blast" },
-  { id: "wonder-woman", name: "Wonder Woman", universe: "DC", rarity: "epic", health: 120, attack: 25, style: "force", move: "Godslayer Spin" },
-  { id: "flash", name: "Flash", universe: "DC", rarity: "epic", health: 104, attack: 23, style: "speed", move: "Speed Burst" },
-  { id: "green-lantern", name: "Green Lantern", universe: "DC", rarity: "rare", health: 108, attack: 21, style: "energy", move: "Ring Wave" },
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+}
 
-  { id: "scorpion", name: "Scorpion", universe: "Mortal Kombat", rarity: "epic", health: 116, attack: 24, style: "fire", move: "Toasty Spear" },
-  { id: "sub-zero", name: "Sub-Zero", universe: "Mortal Kombat", rarity: "rare", health: 114, attack: 21, style: "ice", move: "Frost Breaker" },
-  { id: "liu-kang", name: "Liu Kang", universe: "Mortal Kombat", rarity: "legendary", health: 126, attack: 28, style: "dragon", move: "Dragon Kick" },
-  { id: "raiden", name: "Raiden", universe: "Mortal Kombat", rarity: "mythic", health: 140, attack: 33, style: "lightning", move: "Thunder Storm" },
-  { id: "kitana", name: "Kitana", universe: "Mortal Kombat", rarity: "rare", health: 110, attack: 19, style: "precision", move: "Fan Swipe" }
-];
+button, input {
+  font: inherit;
+}
 
-const packDefinitions = [
-  { id: "fnaf-pack", name: "FNAF Pack", group: "Five Nights at Freddy's", cost: 40 },
-  { id: "marvel-pack", name: "Marvel Pack", group: "Marvel", cost: 50 },
-  { id: "dc-pack", name: "DC Pack", group: "DC", cost: 55 },
-  { id: "mk-pack", name: "Mortal Kombat Pack", group: "Mortal Kombat", cost: 60 }
-];
+.hidden {
+  display: none !important;
+}
 
-const sentencePool = [
-  "I will never back down from this fight.",
-  "The power of my team is stronger than ever.",
-  "Every strike I land makes them weaker.",
-  "I am built for the pressure and the challenge.",
-  "Victory belongs to the fighter who keeps moving.",
-  "My courage fuels each attack and every step.",
-  "The battle is fierce, but I am ready.",
-  "I sharpen my focus and hit with true power.",
-  "The arena shakes as I take control.",
-  "My timing is perfect and my shot lands deep.",
-  "No matter the danger, I stand my ground.",
-  "I trust my skill and strike with confidence.",
-  "The enemy is fast, but I am faster.",
-  "I move with purpose and fight for the win.",
-  "My fingers are quick and my aim is true.",
-  "Every heartbeat pushes me harder to win.",
-  "I feel the rhythm of battle and answer it.",
-  "My focus is like steel and my timing is sharp."
-];
+.intro-screen {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at top, rgba(54, 74, 111, 0.9), rgba(4, 9, 20, 0.98));
+  z-index: 20;
+}
 
-const state = {
-  coins: 120,
-  collection: ["freddy"],
-  selectedFighter: "freddy",
-  currentBattle: null,
-  inventory: {},
-  comboMode: "normal",
-  topWpm: 0,
-  avgWpm: 0,
-  wpmHistory: [],
-  gameStarted: false,
-  audioEnabled: true,
-  lastSentenceStart: 0,
-  revealTimeout: null
-};
+.intro-panel {
+  width: min(760px, calc(100vw - 32px));
+  background: rgba(12, 22, 34, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 26px;
+  padding: 32px 28px 24px;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
+}
 
-function loadState() {
-  const raw = localStorage.getItem("typefight-save");
-  if (!raw) return;
+.eyebrow {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
 
-  try {
-    const saved = JSON.parse(raw);
-    if (saved.coins !== undefined) state.coins = saved.coins;
-    if (saved.collection) state.collection = saved.collection;
-    if (saved.selectedFighter) state.selectedFighter = saved.selectedFighter;
-    if (saved.inventory) state.inventory = saved.inventory;
-    if (saved.topWpm !== undefined) state.topWpm = saved.topWpm;
-    if (saved.avgWpm !== undefined) state.avgWpm = saved.avgWpm;
-    if (saved.wpmHistory) state.wpmHistory = saved.wpmHistory;
-    if (saved.comboMode) state.comboMode = saved.comboMode;
-  } catch (error) {
-    console.warn("Save failed.");
+h1 {
+  margin: 8px 0 0;
+  font-size: clamp(2.4rem, 3vw, 4rem);
+}
+
+.intro-copy {
+  color: var(--muted);
+  font-size: 1.06rem;
+  line-height: 1.7;
+  margin: 18px 0 0;
+}
+
+.intro-actions {
+  margin-top: 26px;
+}
+
+.intro-btn {
+  padding: 14px 26px;
+  font-size: 1.06rem;
+}
+
+.intro-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(120px, 1fr));
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.mini-stat {
+  background: rgba(18, 31, 46, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 16px;
+  padding: 14px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mini-stat span {
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.mini-stat strong {
+  font-size: 1.3rem;
+}
+
+.game-root {
+  max-width: 1520px;
+  margin: 0 auto;
+  padding: 18px 20px 30px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stat-pill {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(22, 32, 52, 0.92);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 12px;
+  padding: 9px 12px;
+}
+
+.stat-pill span {
+  color: var(--muted);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.mode-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.mode-btn {
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  background: rgba(17, 24, 39, 0.96);
+  color: var(--text);
+  font-weight: 700;
+  padding: 10px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.mode-btn.active {
+  border-color: rgba(56, 189, 248, 0.7);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.coin-panel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(251, 191, 36, 0.1);
+  border: 1px solid rgba(251, 191, 36, 0.45);
+  border-radius: 16px;
+  padding: 12px 18px;
+  box-shadow: 0 14px 30px rgba(0,0,0,0.2);
+}
+
+.coin-panel span {
+  color: #f9d976;
+  font-weight: 700;
+}
+
+.coin-panel strong {
+  font-size: 1.6rem;
+}
+
+.primary-btn, .secondary-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #fbbf24, #f97316);
+  color: #141414;
+  box-shadow: 0 12px 20px rgba(249, 115, 22, 0.22);
+}
+
+.secondary-btn {
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+  border: 1px solid rgba(148, 163, 184, 0.14);
+}
+
+.primary-btn:hover, .secondary-btn:hover {
+  transform: translateY(-1px);
+}
+
+.main-layout {
+  display: grid;
+  grid-template-columns: 1.1fr 2.5fr 1.3fr;
+  gap: 18px;
+}
+
+.panel {
+  background: rgba(12, 22, 34, 0.9);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  box-shadow: 0 18px 35px rgba(0,0,0,0.3);
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.fighter-list, .pack-list, .collection-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.fighter-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  background: rgba(24, 39, 59, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 14px;
+  padding: 12px 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, border-color 0.2s ease;
+}
+
+.fighter-item:hover {
+  transform: translateY(-1px);
+  border-color: rgba(56, 189, 248, 0.42);
+}
+
+.fighter-item.selected {
+  border-color: rgba(251, 191, 36, 0.8);
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
+  background: rgba(251, 191, 36, 0.08);
+}
+
+.fighter-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.fighter-name {
+  font-weight: 800;
+}
+
+.fighter-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.rarity-badge {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+}
+
+.rarity-common { background: rgba(209,213,219,0.14); color: var(--common); border-color: rgba(209,213,219,0.45); }
+.rarity-rare { background: rgba(96,165,250,0.14); color: var(--rare); border-color: rgba(96,165,250,0.45); }
+.rarity-epic { background: rgba(167,139,250,0.12); color: var(--epic); border-color: rgba(167,139,250,0.45); }
+.rarity-legendary { background: rgba(251,191,36,0.12); color: var(--legendary); border-color: rgba(251,191,36,0.45); }
+.rarity-mythic { background: rgba(244,114,182,0.12); color: var(--mythic); border-color: rgba(244,114,182,0.45); }
+
+.battle-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.battle-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summon-stage {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
+  align-items: center;
+  gap: 16px;
+}
+
+.arena-side {
+  background: rgba(17, 24, 39, 0.95);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fighter-nameplate {
+  text-align: center;
+  font-size: 1.05rem;
+  font-weight: 800;
+}
+
+.fighter-portrait-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 210px;
+  border-radius: 18px;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(56,189,248,0.15), rgba(15,23,42,0.8));
+  border: 1px solid rgba(148,163,184,0.18);
+}
+
+.enemy-wrapper {
+  background: linear-gradient(180deg, rgba(239,68,68,0.12), rgba(15,23,42,0.8));
+}
+
+.fighter-portrait {
+  position: relative;
+  width: 132px;
+  height: 132px;
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(251,191,36,0.4), rgba(59,130,246,0.3));
+  box-shadow: inset 0 0 15px rgba(255,255,255,0.08), 0 18px 30px rgba(0,0,0,0.28);
+  transform: translateY(0);
+  animation: idleFloat 2.5s ease-in-out infinite;
+}
+
+.player-portrait {
+  background: linear-gradient(180deg, rgba(34,197,94,0.5), rgba(14,116,144,0.62));
+}
+
+.enemy-portrait {
+  background: linear-gradient(180deg, rgba(239,68,68,0.5), rgba(120,53,15,0.64));
+}
+
+.fighter-portrait::before,
+.fighter-portrait::after {
+  content: "";
+  position: absolute;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+}
+
+.fighter-portrait::before {
+  width: 42px;
+  height: 42px;
+  left: 18px;
+  top: 18px;
+}
+
+.fighter-portrait::after {
+  width: 54px;
+  height: 54px;
+  right: 18px;
+  bottom: 18px;
+}
+
+.fighter-portrait.summon {
+  animation: summonPop 0.65s ease-out forwards;
+}
+
+.fighter-portrait.hit {
+  animation: hitPulse 0.35s ease-in-out;
+}
+
+.vs-badge {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #ef4444);
+  color: #141414;
+  font-weight: 900;
+  font-size: 1.2rem;
+  box-shadow: 0 12px 25px rgba(239, 68, 68, 0.25);
+}
+
+.health-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.health-bar {
+  height: 18px;
+  width: 100%;
+  overflow: hidden;
+  background: rgba(148,163,184,0.12);
+  border-radius: 999px;
+  border: 1px solid rgba(148,163,184,0.18);
+}
+
+.health-fill {
+  height: 100%;
+  width: 100%;
+  border-radius: inherit;
+  transition: width 0.25s ease;
+}
+
+.player-fill {
+  background: linear-gradient(90deg, #22c55e, #4ade80);
+}
+
+.enemy-fill {
+  background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+.battle-utility {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.move-tag, .move-boost {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  background: rgba(56, 189, 248, 0.08);
+  border: 1px solid rgba(56, 189, 248, 0.26);
+}
+
+.sentence-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.section-label {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  font-size: 0.72rem;
+}
+
+.sentence-box {
+  min-height: 84px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.88);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 14px 16px;
+  line-height: 1.8;
+  font-size: 1.05rem;
+}
+
+.sentence-box span {
+  border-radius: 4px;
+  padding: 1px 1px;
+}
+
+.sentence-box .correct {
+  background: rgba(34, 197, 94, 0.2);
+  color: #bbf7d0;
+}
+
+.sentence-box .wrong {
+  background: rgba(239, 68, 68, 0.18);
+  color: #fecaca;
+}
+
+.attack-row {
+  display: flex;
+  gap: 12px;
+}
+
+.attack-row input {
+  flex: 1;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 14px 16px;
+  outline: none;
+}
+
+.attack-row input:focus {
+  border-color: rgba(56, 189, 248, 0.5);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+}
+
+.combo-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.combo-btn {
+  border: 1px solid rgba(148,163,184,0.14);
+  background: rgba(17, 24, 39, 0.96);
+  color: var(--text);
+  font-weight: 700;
+  padding: 8px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+}
+
+.combo-btn.active {
+  border-color: rgba(56, 189, 248, 0.7);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.battle-log {
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148,163,184,0.12);
+  border-radius: 12px;
+  min-height: 78px;
+  padding: 12px 14px;
+  line-height: 1.55;
+}
+
+.pack-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: rgba(24, 39, 59, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.pack-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.pack-name {
+  font-weight: 800;
+}
+
+.pack-price {
+  color: #f9d976;
+  font-weight: 800;
+}
+
+.pack-meta {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.pack-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.buy-btn {
+  flex: 1;
+  min-width: 70px;
+  border: 1px solid rgba(148,163,184,0.14);
+  background: rgba(15, 23, 42, 0.9);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 9px 10px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.buy-btn:hover {
+  border-color: rgba(251, 191, 36, 0.55);
+}
+
+.secondary-panel {
+  margin-top: 18px;
+}
+
+.secondary-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.sub-panel {
+  border-radius: 16px;
+  background: rgba(17, 24, 39, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  padding: 14px;
+}
+
+.sub-panel h3 {
+  margin-top: 0;
+}
+
+.small-btn {
+  margin-top: 10px;
+}
+
+.collection-header {
+  margin-bottom: 16px;
+}
+
+.collection-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+}
+
+.collection-card {
+  background: rgba(24, 39, 59, 0.95);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  border-radius: 16px;
+  padding: 14px;
+  box-shadow: inset 0 0 25px rgba(255,255,255,0.02);
+}
+
+.collection-card.rarity-common { box-shadow: 0 0 16px rgba(209,213,219,0.18); }
+.collection-card.rarity-rare { box-shadow: 0 0 18px rgba(96,165,250,0.22); }
+.collection-card.rarity-epic { box-shadow: 0 0 18px rgba(167,139,250,0.22); }
+.collection-card.rarity-legendary { box-shadow: 0 0 20px rgba(251,191,36,0.26); }
+.collection-card.rarity-mythic { box-shadow: 0 0 22px rgba(244,114,182,0.28); }
+
+.collection-card h3 {
+  margin: 10px 0 8px;
+}
+
+.collection-card .meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.77rem;
+  color: var(--muted);
+}
+
+.pull-tag {
+  margin-top: 12px;
+  color: #f9d976;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(2, 6, 12, 0.65);
+  z-index: 50;
+}
+
+.modal-card {
+  background: rgba(15, 23, 42, 0.98);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 20px;
+  width: min(420px, calc(100vw - 24px));
+  padding: 24px;
+}
+
+.modal-card h3 {
+  margin-top: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.pack-reveal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  display: grid;
+  place-items: center;
+}
+
+.reveal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2, 6, 12, 0.66);
+  backdrop-filter: blur(8px);
+}
+
+.reveal-card-wrap {
+  position: relative;
+  z-index: 1;
+}
+
+.reveal-card {
+  width: min(420px, calc(100vw - 28px));
+  background: linear-gradient(180deg, rgba(17,24,39,0.96), rgba(15,23,42,0.98));
+  border-radius: 24px;
+  border: 1px solid rgba(148,163,184,0.18);
+  padding: 22px 22px 18px;
+  box-shadow: 0 28px 80px rgba(0,0,0,0.48);
+  animation: revealPop 0.9s cubic-bezier(.17,.89,.45,1.18) forwards;
+}
+
+.reveal-card.rarity-common { box-shadow: 0 0 18px rgba(209,213,219,0.2); }
+.reveal-card.rarity-rare { box-shadow: 0 0 20px rgba(96,165,250,0.25); }
+.reveal-card.rarity-epic { box-shadow: 0 0 22px rgba(167,139,250,0.25); }
+.reveal-card.rarity-legendary { box-shadow: 0 0 26px rgba(251,191,36,0.28); }
+.reveal-card.rarity-mythic { box-shadow: 0 0 28px rgba(244,114,182,0.3); }
+
+.reveal-label {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.reveal-card h3 {
+  margin: 16px 0 12px;
+  font-size: clamp(2rem, 5vw, 2.6rem);
+}
+
+.reveal-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 18px;
+}
+
+.reveal-stat-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-top: 1px solid rgba(148,163,184,0.14);
+}
+
+.toast {
+  position: fixed;
+  right: 24px;
+  bottom: 26px;
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 12px;
+  padding: 12px 16px;
+  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.25);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.attack-burst {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(251,191,36,0.9) 30%, rgba(239,68,68,0.75) 100%);
+  pointer-events: none;
+  z-index: 10;
+  animation: burstOut 700ms ease-out forwards;
+}
+
+@keyframes summonPop {
+  0% { transform: scale(0.3) translateY(22px); opacity: 0; }
+  60% { transform: scale(1.12) translateY(-5px); opacity: 1; }
+  100% { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+@keyframes hitPulse {
+  0% { transform: scale(1); filter: brightness(1); }
+  35% { transform: scale(1.08); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+@keyframes burstOut {
+  0% { opacity: 1; transform: scale(0.2) translate(0, 0); }
+  100% { opacity: 0; transform: scale(2.8) translate(var(--dx), var(--dy)); }
+}
+
+@keyframes revealPop {
+  0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+  60% { opacity: 1; transform: scale(1.04) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+@keyframes idleFloat {
+  0%, 100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
   }
 }
 
-function saveState() {
-  const saveData = {
-    coins: state.coins,
-    collection: state.collection,
-    selectedFighter: state.selectedFighter,
-    inventory: state.inventory,
-    topWpm: state.topWpm,
-    avgWpm: state.avgWpm,
-    wpmHistory: state.wpmHistory,
-    comboMode: state.comboMode
-  };
-  localStorage.setItem("typefight-save", JSON.stringify(saveData));
-}
-
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.classList.add("show");
-  clearTimeout(showToast.timer);
-  showToast.timer = setTimeout(() => toast.classList.remove("show"), 1800);
-}
-
-function getSelectedFighter() {
-  return allFighters.find(f => f.id === state.selectedFighter) || allFighters[0];
-}
-
-function getOwnedFighters() {
-  return allFighters.filter(f => state.collection.includes(f.id));
-}
-
-function randomWeightedRarity() {
-  const total = Object.values(rarityWeights).reduce((sum, val) => sum + val, 0);
-  let random = Math.random() * total;
-  let running = 0;
-
-  for (const rarity of rarityOrder) {
-    running += rarityWeights[rarity];
-    if (random <= running) return rarity;
+@media (max-width: 1100px) {
+  .main-layout {
+    grid-template-columns: 1fr;
   }
 
-  return "common";
-}
-
-function getUniverseFighters(universeName) {
-  return allFighters.filter(f => f.universe === universeName);
-}
-
-function generatePackCard(universeName) {
-  const pool = getUniverseFighters(universeName);
-  const rarity = randomWeightedRarity();
-  const sameRarity = pool.filter(f => f.rarity === rarity);
-  const options = sameRarity.length ? sameRarity : pool;
-  return options[Math.floor(Math.random() * options.length)];
-}
-
-function getMoveLabel(fighter) {
-  const moveMap = {
-    slash: "Slash",
-    dash: "Dash",
-    power: "Power",
-    speed: "Speed",
-    precision: "Precision",
-    lightning: "Thunder",
-    energy: "Energy",
-    spectral: "Phantom",
-    force: "Force",
-    dragon: "Dragon",
-    ice: "Frost",
-    fire: "Flame",
-    tech: "Tech",
-    "" : "Strike"
-  };
-
-  return fighter.move || moveMap[fighter.style] || "Strike";
-}
-
-function getComboMultiplier() {
-  if (state.comboMode === "normal") return 1;
-  if (state.comboMode === "combo") return 1.35;
-  if (state.comboMode === "special") return 1.8;
-  return 1;
-}
-
-function updateComboButtons() {
-  document.querySelectorAll(".combo-btn").forEach(button => {
-    const isActive = button.dataset.combo === state.comboMode;
-    button.classList.toggle("active", isActive);
-  });
-}
-
-function updateWpmDisplay() {
-  const topWpm = Number(state.topWpm) || 0;
-  const avgWpm = Number(state.avgWpm) || 0;
-
-  document.getElementById("topWpmStat").textContent = topWpm.toFixed(1);
-  document.getElementById("avgWpmStat").textContent = avgWpm.toFixed(1);
-  document.getElementById("introTopWpm").textContent = topWpm.toFixed(1);
-  document.getElementById("introAvgWpm").textContent = avgWpm.toFixed(1);
-}
-
-function awardWpm(typedText) {
-  if (!state.currentBattle || !typedText.length) return;
-
-  const sentence = state.currentBattle.sentence;
-  let correctChars = 0;
-  for (let i = 0; i < Math.min(typedText.length, sentence.length); i++) {
-    if (typedText[i] === sentence[i]) correctChars++;
-  }
-
-  const elapsedMinutes = Math.max((Date.now() - state.lastSentenceStart) / 60000, 0.05);
-  const wpm = (correctChars / 5) / elapsedMinutes;
-
-  state.wpmHistory.push(wpm);
-  state.topWpm = Math.max(state.topWpm, wpm);
-  const total = state.wpmHistory.reduce((sum, entry) => sum + entry, 0);
-  state.avgWpm = total / state.wpmHistory.length;
-
-  updateWpmDisplay();
-  saveState();
-}
-
-function renderRoster() {
-  const rosterList = document.getElementById("rosterList");
-  rosterList.innerHTML = "";
-
-  const owned = getOwnedFighters();
-  owned.forEach(fighter => {
-    const item = document.createElement("div");
-    item.className = "fighter-item" + (fighter.id === state.selectedFighter ? " selected" : "");
-    item.innerHTML = `
-      <div class="fighter-main">
-        <span class="fighter-name">${fighter.name}</span>
-        <span class="fighter-meta">${fighter.universe}</span>
-      </div>
-      <span class="rarity-badge rarity-${fighter.rarity}">${fighter.rarity}</span>
-    `;
-
-    item.addEventListener("click", () => {
-      state.selectedFighter = fighter.id;
-      saveState();
-      renderAll();
-      showToast(`${fighter.name} selected.`);
-    });
-
-    rosterList.appendChild(item);
-  });
-}
-
-function showPackReveal(fighter) {
-  const overlay = document.getElementById("packRevealOverlay");
-  const card = document.getElementById("revealCard");
-  const revealName = document.getElementById("revealName");
-  const revealUniverse = document.getElementById("revealUniverse");
-  const revealRarity = document.getElementById("revealRarity");
-  const revealHp = document.getElementById("revealHp");
-  const revealAttack = document.getElementById("revealAttack");
-
-  revealName.textContent = fighter.name;
-  revealUniverse.textContent = fighter.universe;
-  revealRarity.textContent = fighter.rarity.toUpperCase();
-  revealHp.textContent = fighter.health;
-  revealAttack.textContent = fighter.attack;
-
-  card.className = `reveal-card rarity-${fighter.rarity}`;
-  overlay.classList.remove("hidden");
-
-  clearTimeout(state.revealTimeout);
-  state.revealTimeout = setTimeout(() => {
-    overlay.classList.add("hidden");
-  }, 2200);
-}
-
-function buyPack(packId, amount = 1) {
-  const pack = packDefinitions.find(p => p.id === packId);
-  if (!pack) return;
-
-  const totalCost = pack.cost * amount;
-  if (state.coins < totalCost) {
-    showToast("Not enough coins!");
-    return;
-  }
-
-  state.coins -= totalCost;
-  state.inventory[packId] = (state.inventory[packId] || 0) + amount;
-
-  for (let i = 0; i < amount; i++) {
-    const fighter = generatePackCard(pack.group);
-    if (!state.collection.includes(fighter.id)) {
-      state.collection.push(fighter.id);
-      showToast(`${fighter.name} joined your roster!`);
-      showPackReveal(fighter);
-    } else {
-      const refund = Math.floor(pack.cost * 0.4);
-      state.coins += refund;
-      showToast(`Duplicate! +${refund} coins`);
-    }
-  }
-
-  saveState();
-  renderAll();
-}
-
-function renderPacks() {
-  const packList = document.getElementById("packList");
-  packList.innerHTML = "";
-
-  packDefinitions.forEach(pack => {
-    const wrapper = document.createElement("div");
-    wrapper.className = "pack-item";
-
-    wrapper.innerHTML = `
-      <div class="pack-head">
-        <span class="pack-name">${pack.name}</span>
-        <span class="pack-price">${pack.cost} coins</span>
-      </div>
-      <div class="pack-meta">${pack.group}</div>
-    `;
-
-    const packButtons = document.createElement("div");
-    packButtons.className = "pack-buttons";
-
-    [1, 3, 5].forEach(amount => {
-      const btn = document.createElement("button");
-      btn.className = "buy-btn";
-      btn.textContent = `Buy ${amount}`;
-      btn.addEventListener("click", () => buyPack(pack.id, amount));
-      packButtons.appendChild(btn);
-    });
-
-    wrapper.appendChild(packButtons);
-    packList.appendChild(wrapper);
-  });
-}
-
-function renderCollection() {
-  const collectionList = document.getElementById("collectionList");
-  collectionList.innerHTML = "";
-
-  const owned = getOwnedFighters();
-  owned.forEach(fighter => {
-    const card = document.createElement("div");
-    card.className = `collection-card rarity-${fighter.rarity}`;
-    card.innerHTML = `
-      <div class="meta">
-        <span class="rarity-badge rarity-${fighter.rarity}">${fighter.rarity}</span>
-        <span>${fighter.universe}</span>
-      </div>
-      <h3>${fighter.name}</h3>
-      <div class="meta">
-        <span>HP ${fighter.health}</span>
-        <span>ATK ${fighter.attack}</span>
-      </div>
-      <div class="pull-tag">${fighter.id === "freddy" ? "Starter" : "Owned"}</div>
-    `;
-    collectionList.appendChild(card);
-  });
-}
-
-function setBattleLog(message) {
-  document.getElementById("battleLog").textContent = message;
-}
-
-function getRandomSentence() {
-  const sentence = sentencePool[Math.floor(Math.random() * sentencePool.length)];
-  state.lastSentenceStart = Date.now();
-  return sentence;
-}
-
-function createBattle() {
-  const player = getSelectedFighter();
-  const enemies = allFighters.filter(f => f.id !== player.id);
-  const enemy = enemies[Math.floor(Math.random() * enemies.length)];
-
-  state.currentBattle = {
-    playerId: player.id,
-    enemyId: enemy.id,
-    playerHealth: player.health,
-    enemyHealth: enemy.health,
-    playerMaxHealth: player.health,
-    enemyMaxHealth: enemy.health,
-    sentence: getRandomSentence(),
-    playerName: player.name,
-    enemyName: enemy.name
-  };
-
-  const playerPortrait = document.getElementById("playerPortrait");
-  const enemyPortrait = document.getElementById("enemyPortrait");
-
-  playerPortrait.classList.remove("summon");
-  enemyPortrait.classList.remove("summon");
-  void playerPortrait.offsetWidth;
-  void enemyPortrait.offsetWidth;
-  playerPortrait.classList.add("summon");
-  enemyPortrait.classList.add("summon");
-
-  document.getElementById("playerNamePlate").textContent = player.name;
-  document.getElementById("enemyNamePlate").textContent = enemy.name;
-  document.getElementById("typingInput").value = "";
-  updateSentenceDisplay();
-  renderBattleHealth();
-  setBattleLog(`${player.name} faces ${enemy.name}. Type the sentence to attack!`);
-  updateMoveTags();
-}
-
-function updateMoveTags() {
-  const selected = getSelectedFighter();
-  const moveName = getMoveLabel(selected);
-  const comboName = state.comboMode.charAt(0).toUpperCase() + state.comboMode.slice(1);
-
-  const moveTag = document.getElementById("moveTag");
-  const moveBoost = document.getElementById("moveBoost");
-
-  mov
-  eTag.textContent = `Move: ${moveName}`;
-  moveBoost.textContent = `Combo: ${comboName}`;
-}
-
-function updateSentenceDisplay() {
-  const sentenceBox = document.getElementById("sentenceBox");
-  const input = document.getElementById("typingInput").value;
-  const sentence = state.currentBattle ? state.currentBattle.sentence : "";
-
-  if (!sentence) {
-    sentenceBox.innerHTML = "Start a battle to begin typing.";
-    return;
-  }
-
-  let html = "";
-  for (let i = 0; i < sentence.length; i++) {
-    const char = sentence[i];
-    const typed = input[i];
-    let className = "";
-    if (i < input.length) {
-      className = typed === char ? "correct" : "wrong";
-    }
-    html += `<span class="${className}">${char}</span>`;
-  }
-
-  sentenceBox.innerHTML = html;
-}
-
-function renderBattleHealth() {
-  if (!state.currentBattle) return;
-
-  const playerPercent = (state.currentBattle.playerHealth / state.currentBattle.playerMaxHealth) * 100;
-  const enemyPercent = (state.currentBattle.enemyHealth / state.currentBattle.enemyMaxHealth) * 100;
-
-  document.getElementById("playerHealthFill").style.width = `${Math.max(0, playerPercent)}%`;
-  document.getElementById("enemyHealthFill").style.width = `${Math.max(0, enemyPercent)}%`;
-  document.getElementById("playerHealthText").textContent = `${Math.max(0, state.currentBattle.playerHealth)} / ${state.currentBattle.playerMaxHealth}`;
-  document.getElementById("enemyHealthText").textContent = `${Math.max(0, state.currentBattle.enemyHealth)} / ${state.currentBattle.enemyMaxHealth}`;
-}
-
-function triggerBurst(x, y) {
-  const burst = document.createElement("div");
-  burst.className = "attack-burst";
-  burst.style.left = `${x}px`;
-  burst.style.top = `${y}px`;
-  burst.style.setProperty("--dx", `${(Math.random() - 0.5) * 140}px`);
-  burst.style.setProperty("--dy", `${(Math.random() - 0.5) * 160}px`);
-
-  document.body.appendChild(burst);
-  setTimeout(() => burst.remove(), 700);
-}
-
-function playSfx(type) {
-  if (!state.audioEnabled) return;
-
-  const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-  if (!AudioContextClass) return;
-
-  if (!state.audioCtx) {
-    state.audioCtx = new AudioContextClass();
-  }
-
-  const ctx = state.audioCtx;
-  const oscillator = ctx.createOscillator();
-  const gain = ctx.createGain();
-
-  oscillator.connect(gain);
-  gain.connect(ctx.destination);
-
-  const patterns = {
-    attack: { freq: 180, duration: 0.16, type: "square", volume: 0.04 },
-    hit: { freq: 100, duration: 0.22, type: "sawtooth", volume: 0.05 },
-    win: { freq: 420, duration: 0.28, type: "triangle", volume: 0.06 },
-    lose: { freq: 90, duration: 0.28, type: "sawtooth", volume: 0.05 },
-    pack: { freq: 330, duration: 0.35, type: "triangle", volume: 0.06 }
-  };
-
-  const config = patterns[type] || patterns.attack;
-  oscillator.type = config.type;
-  oscillator.frequency.value = config.freq;
-  gain.gain.value = config.volume;
-
-  oscillator.start();
-  oscillator.stop(ctx.currentTime + config.duration);
-
-  gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + config.duration);
-}
-
-function calculateDamage() {
-  if (!state.currentBattle) return 0;
-
-  const fighter = allFighters.find(f => f.id === state.selectedFighter);
-  const inputText = document.getElementById("typingInput").value;
-  const sentence = state.currentBattle.sentence;
-
-  let correctChars = 0;
-  for (let i = 0; i < Math.min(inputText.length, sentence.length); i++) {
-    if (inputText[i] === sentence[i]) correctChars++;
-  }
-
-  const accuracy = sentence.length ? correctChars / sentence.length : 0;
-  const inputRatio = inputText.length / sentence.length;
-  const comboMultiplier = getComboMultiplier();
-  const rarityMod = rarityBoost[fighter.rarity] || 0;
-  const styleBoost = fighter.style === "power" ? 1.2 : fighter.style === "speed" ? 1.15 : fighter.style === "precision" ? 1.3 : 1.08;
-
-  let damage = Math.round((fighter.attack + rarityMod) * (0.38 + accuracy * 1.8 + inputRatio * 0.8) * comboMultiplier * styleBoost);
-
-  if (inputText === sentence) {
-    damage = Math.round(damage * 1.7);
-  } else if (inputText.length < 6) {
-    damage = Math.round(damage * 0.5);
-  }
-
-  return Math.max(5, damage);
-}
-
-function enemyCounter() {
-  if (!state.currentBattle) return;
-
-  const enemy = allFighters.find(f => f.id === state.currentBattle.enemyId);
-  const counter = Math.max(8, Math.round(enemy.attack * (0.75 + Math.random() * 0.8)));
-  state.currentBattle.playerHealth -= counter;
-
-  setBattleLog(`${enemy.name} counters for ${counter} damage!`);
-  playSfx("hit");
-  renderBattleHealth();
-
-  const playerPortrait = document.getElementById("playerPortrait");
-  playerPortrait.classList.remove("hit");
-  void playerPortrait.offsetWidth;
-  playerPortrait.classList.add("hit");
-
-  if (state.currentBattle.playerHealth <= 0) {
-    state.currentBattle.playerHealth = 0;
-    renderBattleHealth();
-    playSfx("lose");
-    state.currentBattle = null;
-    setBattleLog("You were defeated. Try again and type more accurately!");
-    document.getElementById("typingInput").value = "";
-    updateSentenceDisplay();
+  .secondary-grid {
+    grid-template-columns: 1fr;
   }
 }
 
-function attackButtonHandler() {
-  if (!state.currentBattle) {
-    createBattle();
-    return;
+@media (max-width: 640px) {
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
-  const inputText = document.getElementById("typingInput").value;
-  const sentence = state.currentBattle.sentence;
-
-  if (!inputText.trim()) {
-    showToast("Type the sentence first!");
-    return;
+  .topbar-right {
+    width: 100%;
+    justify-content: space-between;
   }
 
-  const damage = calculateDamage();
-  state.currentBattle.enemyHealth -= damage;
-
-  const selectedFighter = getSelectedFighter();
-  setBattleLog(`${selectedFighter.name} deals ${damage} damage with ${getMoveLabel(selectedFighter)}!`);
-  playSfx("attack");
-
-  const playerPortrait = document.getElementById("playerPortrait");
-  const enemyPortrait = document.getElementById("enemyPortrait");
-  const playerBox = playerPortrait.getBoundingClientRect();
-  const enemyBox = enemyPortrait.getBoundingClientRect();
-  const x = (playerBox.left + enemyBox.left) / 2;
-  const y = (playerBox.top + enemyBox.top) / 2;
-  triggerBurst(x, y);
-
-  if (state.currentBattle.enemyHealth <= 0) {
-    state.currentBattle.enemyHealth = 0;
-    renderBattleHealth();
-    playSfx("win");
-
-    const reward = 35 + Math.floor(Math.random() * 30);
-    state.coins += reward;
-    setBattleLog(`${selectedFighter.name} wins! +${reward} coins.`);
-    document.getElementById("typingInput").value = "";
-
-    awardWpm(inputText);
-    state.currentBattle = null;
-    updateSentenceDisplay();
-    saveState();
-    renderCoins();
-    return;
+  .attack-row {
+    flex-direction: column;
   }
 
-  renderBattleHealth();
-  enemyCounter();
-
-  if (state.currentBattle && state.currentBattle.playerHealth > 0) {
-    state.currentBattle.sentence = getRandomSentence();
-    document.getElementById("typingInput").value = "";
-    updateSentenceDisplay();
-  }
-
-  awardWpm(inputText);
-  saveState();
-  renderCoins();
-}
-
-function renderCoins() {
-  document.getElementById("coinCount").textContent = state.coins;
-}
-
-function bindEvents() {
-  document.getElementById("startBtn").addEventListener("click", () => {
-    state.gameStarted = true;
-    document.getElementById("introScreen").classList.add("hidden");
-    document.getElementById("gameRoot").classList.remove("hidden");
-    updateWpmDisplay();
-    createBattle();
-  });
-
-  document.getElementById("attackBtn").addEventListener("click", attackButtonHandler);
-  document.getElementById("newBattleBtn").addEventListener("click", createBattle);
-
-  document.getElementById("typingInput").addEventListener("input", () => {
-    updateSentenceDisplay();
-    const current = document.getElementById("typingInput").value;
-    if (current.length > 0 && state.currentBattle) {
-      const now = Date.now();
-      const elapsedMinutes = Math.max((now - state.lastSentenceStart) / 60000, 0.05);
-      const cm = current.split("").filter(Boolean).length / 5;
-      const liveWpm = cm / elapsedMinutes;
-      document.getElementById("moveBoost").textContent = `Combo: ${state.comboMode.toUpperCase()} | WPM ${liveWpm.toFixed(1)}`;
-    }
-  });
-
-  document.getElementById("typingInput").addEventListener("keydown", (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      attackButtonHandler();
-    }
-  });
-
-  document.querySelectorAll(".combo-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      state.comboMode = button.dataset.combo;
-      updateComboButtons();
-      updateMoveTags();
-      saveState();
-      showToast(`${state.comboMode.toUpperCase()} mode active`);
-    });
-  });
-}
-
-function renderAll() {
-  renderCoins();
-  renderRoster();
-  renderPacks();
-  renderCollection();
-  updateComboButtons();
-  updateMoveTags();
-  updateWpmDisplay();
-
-  const selected = getSelectedFighter();
-  document.getElementById("playerNamePlate").textContent = selected.name;
-  document.getElementById("playerHealthFill").style.width = "100%";
-  document.getElementById("playerHealthText").textContent = `${selected.health} / ${selected.health}`;
-
-  if (!state.currentBattle) {
-    document.getElementById("enemyNamePlate").textContent = "Enemy";
-    document.getElementById("enemyHealthFill").style.width = "100%";
-    document.getElementById("enemyHealthText").textContent = "0 / 0";
-    document.getElementById("sentenceBox").textContent = "Choose your fighter and start a battle.";
-  } else {
-    renderBattleHealth();
-    updateSentenceDisplay();
+  .intro-stats {
+    grid-template-columns: 1fr;
   }
 }
-
-function init() {
-  loadState();
-
-  if (!state.collection.includes("freddy")) {
-    state.collection.push("freddy");
-  }
-
-  if (!state.selectedFighter) {
-    state.selectedFighter = "freddy";
-  }
-
-  bindEvents();
-  renderAll();
-
-  if (state.gameStarted) {
-    document.getElementById("introScreen").classList.add("hidden");
-    document.getElementById("gameRoot").classList.remove("hidden");
-    createBattle();
-  }
-}
-
-init();

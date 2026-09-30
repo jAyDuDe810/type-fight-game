@@ -1,783 +1,228 @@
-:root {
-  --bg-1: #050b14;
-  --bg-2: #101a2d;
-  --panel: rgba(12, 22, 34, 0.9);
-  --panel-alt: rgba(22, 36, 55, 0.95);
-  --line: rgba(148, 163, 184, 0.18);
-  --text: #edf6ff;
-  --muted: #a4b7d4;
-  --primary: #fbbf24;
-  --secondary: #38bdf8;
-  --danger: #ef4444;
-  --good: #22c55e;
-  --shadow: rgba(0, 0, 0, 0.35);
-  --common: #d1d5db;
-  --rare: #60a5fa;
-  --epic: #a78bfa;
-  --legendary: #fbbf24;
-  --mythic: #f472b6;
-}
-
-* {
-  box-sizing: border-box;
-}
-
-html, body {
-  margin: 0;
-  min-height: 100%;
-  font-family: Arial, Helvetica, sans-serif;
-  background: radial-gradient(circle at top, #13243d 0%, var(--bg-1) 35%, #040914 100%);
-  color: var(--text);
-}
-
-body {
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-button, input {
-  font: inherit;
-}
-
-.hidden {
-  display: none !important;
-}
-
-.intro-screen {
-  position: fixed;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  background: radial-gradient(circle at top, rgba(54, 74, 111, 0.9), rgba(4, 9, 20, 0.98));
-  z-index: 20;
-}
-
-.intro-panel {
-  width: min(720px, calc(100vw - 32px));
-  background: rgba(12, 22, 34, 0.9);
-  border: 1px solid rgba(148, 163, 184, 0.18);
-  border-radius: 26px;
-  padding: 32px 28px 24px;
-  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.42);
-}
-
-.eyebrow {
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  font-size: 0.7rem;
-}
-
-h1 {
-  margin: 8px 0 0;
-  font-size: clamp(2.4rem, 3vw, 4rem);
-}
-
-.intro-copy {
-  color: var(--muted);
-  font-size: 1.06rem;
-  line-height: 1.7;
-  margin: 18px 0 0;
-}
-
-.intro-actions {
-  margin-top: 26px;
-}
-
-.intro-btn {
-  padding: 14px 26px;
-  font-size: 1.06rem;
-}
-
-.intro-stats {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(120px, 1fr));
-  gap: 12px;
-  margin-top: 26px;
-}
-
-.mini-stat {
-  background: rgba(18, 31, 46, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 16px;
-  padding: 14px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.mini-stat span {
-  color: var(--muted);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-}
-
-.mini-stat strong {
-  font-size: 1.3rem;
-}
-
-.game-root {
-  max-width: 1520px;
-  margin: 0 auto;
-  padding: 18px 20px 30px;
-}
-
-.topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 18px;
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.stat-pill {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  background: rgba(22, 32, 52, 0.92);
-  border: 1px solid rgba(148, 163, 184, 0.14);
-  border-radius: 12px;
-  padding: 9px 12px;
-}
-
-.stat-pill span {
-  color: var(--muted);
-  font-size: 0.74rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.coin-panel {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.45);
-  border-radius: 16px;
-  padding: 12px 18px;
-  box-shadow: 0 14px 30px rgba(0,0,0,0.2);
-}
-
-.coin-panel span {
-  color: #f9d976;
-  font-weight: 700;
-}
-
-.coin-panel strong {
-  font-size: 1.6rem;
-}
-
-.main-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 2.5fr 1.3fr;
-  gap: 18px;
-}
-
-.panel {
-  background: rgba(12, 22, 34, 0.9);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 18px;
-  box-shadow: 0 18px 35px rgba(0,0,0,0.3);
-}
-
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-h2 {
-  margin: 0;
-  font-size: 1.4rem;
-}
-
-.fighter-list, .pack-list, .collection-grid {
-  display: grid;
-  gap: 12px;
-}
-
-.fighter-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-  background: rgba(24, 39, 59, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  border-radius: 14px;
-  padding: 12px 12px;
-  cursor: pointer;
-  transition: transform 0.15s ease, border-color 0.2s ease;
-}
-
-.fighter-item:hover {
-  transform: translateY(-1px);
-  border-color: rgba(56, 189, 248, 0.42);
-}
-
-.fighter-item.selected {
-  border-color: rgba(251, 191, 36, 0.8);
-  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.12);
-  background: rgba(251, 191, 36, 0.08);
-}
-
-.fighter-main {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.fighter-name {
-  font-weight: 800;
-}
-
-.fighter-meta {
-  font-size: 0.72rem;
-  color: var(--muted);
-}
-
-.rarity-badge {
-  padding: 4px 8px;
-  border-radius: 999px;
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  border: 1px solid transparent;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-}
-
-.rarity-common { background: rgba(209,213,219,0.14); color: var(--common); border-color: rgba(209,213,219,0.45); }
-.rarity-rare { background: rgba(96,165,250,0.14); color: var(--rare); border-color: rgba(96,165,250,0.45); }
-.rarity-epic { background: rgba(167,139,250,0.12); color: var(--epic); border-color: rgba(167,139,250,0.45); }
-.rarity-legendary { background: rgba(251,191,36,0.12); color: var(--legendary); border-color: rgba(251,191,36,0.45); }
-.rarity-mythic { background: rgba(244,114,182,0.12); color: var(--mythic); border-color: rgba(244,114,182,0.45); }
-
-.battle-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.battle-topbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.primary-btn {
-  border: none;
-  background: linear-gradient(135deg, #fbbf24, #f97316);
-  color: #141414;
-  border-radius: 12px;
-  padding: 10px 16px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 12px 20px rgba(249, 115, 22, 0.22);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.primary-btn:hover {
-  transform: translateY(-1px);
-}
-
-.summon-stage {
-  display: grid;
-  grid-template-columns: minmax(180px, 1fr) auto minmax(180px, 1fr);
-  align-items: center;
-  gap: 16px;
-}
-
-.arena-side {
-  background: rgba(17, 24, 39, 0.95);
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.fighter-nameplate {
-  text-align: center;
-  font-size: 1.05rem;
-  font-weight: 800;
-}
-
-.fighter-portrait-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 210px;
-  border-radius: 18px;
-  overflow: hidden;
-  background: linear-gradient(180deg, rgba(56,189,248,0.15), rgba(15,23,42,0.8));
-  border: 1px solid rgba(148,163,184,0.18);
-}
-
-.enemy-wrapper {
-  background: linear-gradient(180deg, rgba(239,68,68,0.12), rgba(15,23,42,0.8));
-}
-
-.fighter-portrait {
-  position: relative;
-  width: 132px;
-  height: 132px;
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(251,191,36,0.4), rgba(59,130,246,0.3));
-  box-shadow: inset 0 0 15px rgba(255,255,255,0.08), 0 18px 30px rgba(0,0,0,0.28);
-  transform: translateY(0);
-  animation: idleFloat 2.5s ease-in-out infinite;
-}
-
-.player-portrait {
-  background: linear-gradient(180deg, rgba(34,197,94,0.5), rgba(14,116,144,0.62));
-}
-
-.enemy-portrait {
-  background: linear-gradient(180deg, rgba(239,68,68,0.5), rgba(120,53,15,0.64));
-}
-
-.fighter-portrait::before,
-.fighter-portrait::after {
-  content: "";
-  position: absolute;
-  background: rgba(255,255,255,0.18);
-  border-radius: 50%;
-}
-
-.fighter-portrait::before {
-  width: 42px;
-  height: 42px;
-  left: 18px;
-  top: 18px;
-}
-
-.fighter-portrait::after {
-  width: 54px;
-  height: 54px;
-  right: 18px;
-  bottom: 18px;
-}
-
-.fighter-portrait.summon {
-  animation: summonPop 0.65s ease-out forwards;
-}
-
-.fighter-portrait.hit {
-  animation: hitPulse 0.35s ease-in-out;
-}
-
-.vs-badge {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #fbbf24, #ef4444);
-  color: #141414;
-  font-weight: 900;
-  font-size: 1.2rem;
-  box-shadow: 0 12px 25px rgba(239, 68, 68, 0.25);
-}
-
-.health-wrap {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.health-bar {
-  height: 18px;
-  width: 100%;
-  overflow: hidden;
-  background: rgba(148,163,184,0.12);
-  border-radius: 999px;
-  border: 1px solid rgba(148,163,184,0.18);
-}
-
-.health-fill {
-  height: 100%;
-  width: 100%;
-  border-radius: inherit;
-  transition: width 0.25s ease;
-}
-
-.player-fill {
-  background: linear-gradient(90deg, #22c55e, #4ade80);
-}
-
-.enemy-fill {
-  background: linear-gradient(90deg, #ef4444, #f97316);
-}
-
-.battle-utility {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.move-tag, .move-boost {
-  display: inline-flex;
-  align-items: center;
-  border-radius: 999px;
-  padding: 6px 12px;
-  font-size: 0.75rem;
-  font-weight: 800;
-  background: rgba(56, 189, 248, 0.08);
-  border: 1px solid rgba(56, 189, 248, 0.26);
-}
-
-.sentence-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.section-label {
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-  font-size: 0.72rem;
-}
-
-.sentence-box {
-  min-height: 84px;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 2px;
-  border-radius: 14px;
-  background: rgba(15, 23, 42, 0.88);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  padding: 14px 16px;
-  line-height: 1.8;
-  font-size: 1.05rem;
-}
-
-.sentence-box span {
-  border-radius: 4px;
-  padding: 1px 1px;
-}
-
-.sentence-box .correct {
-  background: rgba(34, 197, 94, 0.2);
-  color: #bbf7d0;
-}
-
-.sentence-box .wrong {
-  background: rgba(239, 68, 68, 0.18);
-  color: #fecaca;
-}
-
-.attack-row {
-  display: flex;
-  gap: 12px;
-}
-
-.attack-row input {
-  flex: 1;
-  border: 1px solid rgba(148, 163, 184, 0.15);
-  background: rgba(15, 23, 42, 0.9);
-  color: var(--text);
-  border-radius: 12px;
-  padding: 14px 16px;
-  outline: none;
-}
-
-.attack-row input:focus {
-  border-color: rgba(56, 189, 248, 0.5);
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
-}
-
-.combo-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.combo-btn {
-  border: 1px solid rgba(148,163,184,0.14);
-  background: rgba(17, 24, 39, 0.96);
-  color: var(--text);
-  font-weight: 700;
-  padding: 8px 14px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-.combo-btn.active {
-  border-color: rgba(56, 189, 248, 0.7);
-  background: rgba(56, 189, 248, 0.08);
-}
-
-.battle-log {
-  background: rgba(15, 23, 42, 0.9);
-  border: 1px solid rgba(148,163,184,0.12);
-  border-radius: 12px;
-  min-height: 78px;
-  padding: 12px 14px;
-  line-height: 1.55;
-}
-
-.pack-item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  background: rgba(24, 39, 59, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  border-radius: 14px;
-  padding: 14px;
-}
-
-.pack-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.pack-name {
-  font-weight: 800;
-}
-
-.pack-price {
-  color: #f9d976;
-  font-weight: 800;
-}
-
-.pack-meta {
-  color: var(--muted);
-  font-size: 0.8rem;
-}
-
-.pack-buttons {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.buy-btn {
-  flex: 1;
-  min-width: 70px;
-  border: 1px solid rgba(148,163,184,0.14);
-  background: rgba(15, 23, 42, 0.9);
-  color: var(--text);
-  border-radius: 10px;
-  padding: 9px 10px;
-  cursor: pointer;
-  font-weight: 700;
-}
-
-.buy-btn:hover {
-  border-color: rgba(251, 191, 36, 0.55);
-}
-
-.collection-header {
-  margin-bottom: 16px;
-}
-
-.collection-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 14px;
-}
-
-.collection-card {
-  background: rgba(24, 39, 59, 0.95);
-  border: 1px solid rgba(148, 163, 184, 0.12);
-  border-radius: 16px;
-  padding: 14px;
-  box-shadow: inset 0 0 25px rgba(255,255,255,0.02);
-}
-
-.collection-card.rarity-common { box-shadow: 0 0 16px rgba(209,213,219,0.18); }
-.collection-card.rarity-rare { box-shadow: 0 0 18px rgba(96,165,250,0.22); }
-.collection-card.rarity-epic { box-shadow: 0 0 18px rgba(167,139,250,0.22); }
-.collection-card.rarity-legendary { box-shadow: 0 0 20px rgba(251,191,36,0.26); }
-.collection-card.rarity-mythic { box-shadow: 0 0 22px rgba(244,114,182,0.28); }
-
-.collection-card h3 {
-  margin: 10px 0 8px;
-}
-
-.collection-card .meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  font-size: 0.77rem;
-  color: var(--muted);
-}
-
-.pull-tag {
-  margin-top: 12px;
-  color: #f9d976;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  font-size: 0.68rem;
-  font-weight: 800;
-}
-
-.pack-reveal-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 30;
-  display: grid;
-  place-items: center;
-}
-
-.reveal-backdrop {
-  position: absolute;
-  inset: 0;
-  background: rgba(2, 6, 12, 0.66);
-  backdrop-filter: blur(8px);
-}
-
-.reveal-card-wrap {
-  position: relative;
-  z-index: 1;
-}
-
-.reveal-card {
-  width: min(420px, calc(100vw - 28px));
-  background: linear-gradient(180deg, rgba(17,24,39,0.96), rgba(15,23,42,0.98));
-  border-radius: 24px;
-  border: 1px solid rgba(148,163,184,0.18);
-  padding: 22px 22px 18px;
-  box-shadow: 0 28px 80px rgba(0,0,0,0.48);
-  animation: revealPop 0.9s cubic-bezier(.17,.89,.45,1.18) forwards;
-}
-
-.reveal-label {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--muted);
-  font-size: 0.7rem;
-}
-
-.reveal-card h3 {
-  margin: 16px 0 12px;
-  font-size: clamp(2rem, 5vw, 2.6rem);
-}
-
-.reveal-meta {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 0.8rem;
-  color: var(--muted);
-  margin-bottom: 18px;
-}
-
-.reveal-stat-line {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  align-items: center;
-  padding: 12px 0;
-  border-top: 1px solid rgba(148,163,184,0.14);
-}
-
-.toast {
-  position: fixed;
-  right: 24px;
-  bottom: 26px;
-  background: rgba(15, 23, 42, 0.96);
-  color: var(--text);
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 12px;
-  padding: 12px 16px;
-  box-shadow: 0 14px 25px rgba(0, 0, 0, 0.25);
-  opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 0.25s ease, transform 0.25s ease;
-  pointer-events: none;
-  z-index: 40;
-}
-
-.toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.attack-burst {
-  position: absolute;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(251,191,36,0.9) 30%, rgba(239,68,68,0.75) 100%);
-  pointer-events: none;
-  z-index: 10;
-  animation: burstOut 700ms ease-out forwards;
-}
-
-@keyframes summonPop {
-  0% { transform: scale(0.3) translateY(22px); opacity: 0; }
-  60% { transform: scale(1.12) translateY(-5px); opacity: 1; }
-  100% { transform: scale(1) translateY(0); opacity: 1; }
-}
-
-@keyframes hitPulse {
-  0% { transform: scale(1); filter: brightness(1); }
-  35% { transform: scale(1.08); filter: brightness(1.5); }
-  100% { transform: scale(1); filter: brightness(1); }
-}
-
-@keyframes burstOut {
-  0% { opacity: 1; transform: scale(0.2) translate(0, 0); }
-  100% { opacity: 0; transform: scale(2.8) translate(var(--dx), var(--dy)); }
-}
-
-@keyframes revealPop {
-  0% { opacity: 0; transform: scale(0.8) translateY(30px); }
-  60% { opacity: 1; transform: scale(1.04) translateY(-4px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
-}
-
-@keyframes idleFloat {
-  0%, 100% {
-    transform: translateY(0px) scale(1);
-  }
-  50% {
-    transform: translateY(-8px) scale(1.02);
-  }
-}
-
-@media (max-width: 1100px) {
-  .main-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 640px) {
-  .topbar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .topbar-right {
-    width: 100%;
-    justify-content: space-between;
-  }
-
-  .attack-row {
-    flex-direction: column;
-  }
-
-  .intro-stats {
-    grid-template-columns: 1fr;
-  }
-}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Type Fight</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+  </head>
+  <body>
+    <div id="introScreen" class="intro-screen">
+      <div class="intro-panel">
+        <p class="eyebrow">Battle Card Arena</p>
+        <h1>Type Fight</h1>
+        <p class="intro-copy">
+          Recruit fighters from FNAF, Marvel, DC, Mortal Kombat, and multiverse legends.
+          Open packs, build your collection, fight bosses, play tournaments, and battle online.
+        </p>
+
+        <div class="intro-actions">
+          <button id="startBtn" class="primary-btn intro-btn">Start Game</button>
+        </div>
+
+        <div class="intro-stats">
+          <div class="mini-stat">
+            <span>Top WPM</span>
+            <strong id="introTopWpm">0</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Avg WPM</span>
+            <strong id="introAvgWpm">0</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Starter</span>
+            <strong>Freddy</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameRoot" class="game-root hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Battle Card Arena</p>
+          <h1>Type Fight</h1>
+        </div>
+
+        <div class="topbar-right">
+          <div class="stat-pill">
+            <span>Top WPM</span>
+            <strong id="topWpmStat">0</strong>
+          </div>
+          <div class="stat-pill">
+            <span>Avg WPM</span>
+            <strong id="avgWpmStat">0</strong>
+          </div>
+          <div class="coin-panel">
+            <span>Coins</span>
+            <strong id="coinCount">120</strong>
+          </div>
+          <button id="saveBtn" class="secondary-btn">Save</button>
+          <button id="loadBtn" class="secondary-btn">Load</button>
+        </div>
+      </header>
+
+      <div class="mode-row">
+        <button class="mode-btn active" data-mode="local">Local Battle</button>
+        <button class="mode-btn" data-mode="tournament">Tournament</button>
+        <button class="mode-btn" data-mode="online">Online</button>
+      </div>
+
+      <main class="main-layout">
+        <aside class="panel roster-panel">
+          <div class="panel-header">
+            <h2>Roster</h2>
+          </div>
+          <div id="rosterList" class="fighter-list"></div>
+        </aside>
+
+        <section class="panel battle-panel">
+          <div class="battle-topbar">
+            <h2>Battle Arena</h2>
+            <button id="newBattleBtn" class="primary-btn">New Battle</button>
+          </div>
+
+          <div class="summon-stage">
+            <div class="arena-side player-side">
+              <div class="fighter-nameplate" id="playerNamePlate">Freddy Fazbear</div>
+              <div class="fighter-portrait-wrapper">
+                <div class="fighter-portrait player-portrait" id="playerPortrait"></div>
+              </div>
+              <div class="health-wrap">
+                <div class="health-bar">
+                  <div id="playerHealthFill" class="health-fill player-fill"></div>
+                </div>
+                <span id="playerHealthText">105 / 105</span>
+              </div>
+            </div>
+
+            <div class="vs-badge">VS</div>
+
+            <div class="arena-side enemy-side">
+              <div class="fighter-nameplate" id="enemyNamePlate">Enemy</div>
+              <div class="fighter-portrait-wrapper enemy-wrapper">
+                <div class="fighter-portrait enemy-portrait" id="enemyPortrait"></div>
+              </div>
+              <div class="health-wrap">
+                <div class="health-bar">
+                  <div id="enemyHealthFill" class="health-fill enemy-fill"></div>
+                </div>
+                <span id="enemyHealthText">0 / 0</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="battle-utility">
+            <div class="move-tag" id="moveTag">Move: Slash</div>
+            <div class="move-boost" id="moveBoost">Combo: Normal</div>
+          </div>
+
+          <div class="sentence-panel">
+            <p class="section-label">Type to attack</p>
+            <div id="sentenceBox" class="sentence-box"></div>
+          </div>
+
+          <div class="attack-row">
+            <input
+              id="typingInput"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Type the sentence here..."
+            />
+            <button id="attackBtn" class="primary-btn">Attack</button>
+          </div>
+
+          <div class="combo-row">
+            <button class="combo-btn active" data-combo="normal">Normal</button>
+            <button class="combo-btn" data-combo="combo">Combo</button>
+            <button class="combo-btn" data-combo="special">Special</button>
+          </div>
+
+          <div id="battleLog" class="battle-log">Pick a fighter and begin the fight.</div>
+        </section>
+
+        <aside class="panel shop-panel">
+          <div class="panel-header">
+            <h2>Packs</h2>
+          </div>
+          <div id="packList" class="pack-list"></div>
+        </aside>
+      </main>
+
+      <section class="panel secondary-panel">
+        <div class="panel-header">
+          <h2>Modes & Online</h2>
+        </div>
+
+        <div class="secondary-grid">
+          <div class="sub-panel tournament-box">
+            <h3>Tournament</h3>
+            <div id="tournamentStatus">No tournament started.</div>
+            <button id="startTournamentBtn" class="primary-btn small-btn">Start Tournament</button>
+          </div>
+
+          <div class="sub-panel boss-box">
+            <h3>Boss Fight</h3>
+            <div id="bossStatus">No boss battle active.</div>
+            <button id="bossBtn" class="primary-btn small-btn">Boss Battle</button>
+          </div>
+
+          <div class="sub-panel online-box">
+            <h3>Online</h3>
+            <div id="onlineStatus">Offline mode ready.</div>
+            <button id="friendBtn" class="primary-btn small-btn">Add Friend</button>
+            <button id="chatBtn" class="secondary-btn small-btn">Open Chat</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel collection-panel">
+        <div class="panel-header collection-header">
+          <h2>Collection</h2>
+        </div>
+        <div id="collectionList" class="collection-grid"></div>
+      </section>
+    </div>
+
+    <div id="saveModal" class="modal hidden">
+      <div class="modal-card">
+        <h3>Save and Load</h3>
+        <p>Save to browser or load your current progress.</p>
+        <div class="modal-actions">
+          <button id="confirmSave" class="primary-btn">Save</button>
+          <button id="confirmLoad" class="secondary-btn">Load</button>
+          <button id="closeSaveModal" class="secondary-btn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="packRevealOverlay" class="pack-reveal-overlay hidden">
+      <div class="reveal-backdrop"></div>
+      <div class="reveal-card-wrap">
+        <div id="revealCard" class="reveal-card">
+          <div class="reveal-label">New Fighter</div>
+          <h3 id="revealName">Freddy</h3>
+          <div class="reveal-meta">
+            <span id="revealUniverse">Five Nights at Freddy's</span>
+            <span id="revealRarity">Common</span>
+          </div>
+          <div class="reveal-stat-line">
+            <span>HP</span>
+            <strong id="revealHp">0</strong>
+          </div>
+          <div class="reveal-stat-line">
+            <span>ATK</span>
+            <strong id="revealAttack">0</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
