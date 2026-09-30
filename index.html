@@ -1,104 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Type Fight</title>
-  <link rel="stylesheet" href="style.css" />
-</head>
-<body>
-  <div class="app-shell">
-    <header class="topbar">
-      <div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Type Fight</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="introScreen" class="intro-screen">
+      <div class="intro-panel">
         <p class="eyebrow">Battle Card Arena</p>
         <h1>Type Fight</h1>
-      </div>
-      <div class="coin-panel">
-        <span>Coins</span>
-        <strong id="coinCount">120</strong>
-      </div>
-    </header>
+        <p class="intro-copy">
+          Recruit legendary fighters from Five Nights at Freddy's, Marvel, DC, and Mortal Kombat.
+          Build the best roster, open packs, and destroy enemies with perfect typing.
+        </p>
 
-    <main class="main-layout">
-      <aside class="panel roster-panel">
-        <div class="panel-header">
-          <h2>Roster</h2>
-        </div>
-        <div id="rosterList" class="fighter-list"></div>
-      </aside>
-
-      <section class="panel battle-panel">
-        <div class="battle-topbar">
-          <h2>Battle Arena</h2>
-          <button id="newBattleBtn" class="primary-btn">New Battle</button>
+        <div class="intro-actions">
+          <button id="startBtn" class="primary-btn intro-btn">Start Game</button>
         </div>
 
-        <div class="summon-stage">
-          <div class="arena-side player-side">
-            <div class="fighter-nameplate" id="playerNamePlate">Freddy Fazbear</div>
-            <div class="fighter-portrait-wrapper">
-              <div class="fighter-portrait player-portrait" id="playerPortrait"></div>
-            </div>
-            <div class="health-wrap">
-              <div class="health-bar">
-                <div id="playerHealthFill" class="health-fill player-fill"></div>
+        <div class="intro-stats">
+          <div class="mini-stat">
+            <span>Top WPM</span>
+            <strong id="introTopWpm">0</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Avg WPM</span>
+            <strong id="introAvgWpm">0</strong>
+          </div>
+          <div class="mini-stat">
+            <span>Starter</span>
+            <strong>Freddy</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="gameRoot" class="game-root hidden">
+      <header class="topbar">
+        <div>
+          <p class="eyebrow">Battle Card Arena</p>
+          <h1>Type Fight</h1>
+        </div>
+
+        <div class="topbar-right">
+          <div class="stat-pill">
+            <span>Top WPM</span>
+            <strong id="topWpmStat">0</strong>
+          </div>
+          <div class="stat-pill">
+            <span>Avg WPM</span>
+            <strong id="avgWpmStat">0</strong>
+          </div>
+          <div class="coin-panel">
+            <span>Coins</span>
+            <strong id="coinCount">120</strong>
+          </div>
+        </div>
+      </header>
+
+      <main class="main-layout">
+        <aside class="panel roster-panel">
+          <div class="panel-header">
+            <h2>Roster</h2>
+          </div>
+          <div id="rosterList" class="fighter-list"></div>
+        </aside>
+
+        <section class="panel battle-panel">
+          <div class="battle-topbar">
+            <h2>Battle Arena</h2>
+            <button id="newBattleBtn" class="primary-btn">New Battle</button>
+          </div>
+
+          <div class="summon-stage">
+            <div class="arena-side player-side">
+              <div class="fighter-nameplate" id="playerNamePlate">Freddy Fazbear</div>
+              <div class="fighter-portrait-wrapper">
+                <div class="fighter-portrait player-portrait" id="playerPortrait"></div>
               </div>
-              <span id="playerHealthText">105 / 105</span>
+              <div class="health-wrap">
+                <div class="health-bar">
+                  <div id="playerHealthFill" class="health-fill player-fill"></div>
+                </div>
+                <span id="playerHealthText">105 / 105</span>
+              </div>
+            </div>
+
+            <div class="vs-badge">VS</div>
+
+            <div class="arena-side enemy-side">
+              <div class="fighter-nameplate" id="enemyNamePlate">Enemy</div>
+              <div class="fighter-portrait-wrapper enemy-wrapper">
+                <div class="fighter-portrait enemy-portrait" id="enemyPortrait"></div>
+              </div>
+              <div class="health-wrap">
+                <div class="health-bar">
+                  <div id="enemyHealthFill" class="health-fill enemy-fill"></div>
+                </div>
+                <span id="enemyHealthText">0 / 0</span>
+              </div>
             </div>
           </div>
 
-          <div class="vs-badge">VS</div>
-
-          <div class="arena-side enemy-side">
-            <div class="fighter-nameplate" id="enemyNamePlate">Enemy</div>
-            <div class="fighter-portrait-wrapper">
-              <div class="fighter-portrait enemy-portrait" id="enemyPortrait"></div>
-            </div>
-            <div class="health-wrap">
-              <div class="health-bar">
-                <div id="enemyHealthFill" class="health-fill enemy-fill"></div>
-              </div>
-              <span id="enemyHealthText">0 / 0</span>
-            </div>
+          <div class="battle-utility">
+            <div class="move-tag" id="moveTag">Move: Slash</div>
+            <div class="move-boost" id="moveBoost">Combo: Normal</div>
           </div>
-        </div>
 
-        <div class="sentence-panel">
-          <p class="section-label">Type to attack</p>
-          <div id="sentenceBox" class="sentence-box"></div>
-        </div>
+          <div class="sentence-panel">
+            <p class="section-label">Type to attack</p>
+            <div id="sentenceBox" class="sentence-box"></div>
+          </div>
 
-        <div class="attack-row">
-          <input id="typingInput" type="text" autocomplete="off" spellcheck="false" placeholder="Type the sentence here..." />
-          <button id="attackBtn" class="primary-btn">Attack</button>
-        </div>
+          <div class="attack-row">
+            <input
+              id="typingInput"
+              type="text"
+              autocomplete="off"
+              spellcheck="false"
+              placeholder="Type the sentence here..."
+            />
+            <button id="attackBtn" class="primary-btn">Attack</button>
+          </div>
 
-        <div class="combo-row">
-          <button class="combo-btn" data-combo="normal">Normal</button>
-          <button class="combo-btn" data-combo="combo">Combo</button>
-          <button class="combo-btn" data-combo="special">Special</button>
-        </div>
+          <div class="combo-row">
+            <button class="combo-btn active" data-combo="normal">Normal</button>
+            <button class="combo-btn" data-combo="combo">Combo</button>
+            <button class="combo-btn" data-combo="special">Special</button>
+          </div>
 
-        <div id="battleLog" class="battle-log">Pick a fighter and start battling.</div>
+          <div id="battleLog" class="battle-log">Pick a fighter and begin the fight.</div>
+        </section>
+
+        <aside class="panel shop-panel">
+          <div class="panel-header">
+            <h2>Packs</h2>
+          </div>
+          <div id="packList" class="pack-list"></div>
+        </aside>
+      </main>
+
+      <section class="panel collection-panel">
+        <div class="panel-header collection-header">
+          <h2>Collection</h2>
+        </div>
+        <div id="collectionList" class="collection-grid"></div>
       </section>
+    </div>
 
-      <aside class="panel shop-panel">
-        <div class="panel-header">
-          <h2>Packs</h2>
+    <div id="packRevealOverlay" class="pack-reveal-overlay hidden">
+      <div class="reveal-backdrop"></div>
+      <div class="reveal-card-wrap">
+        <div id="revealCard" class="reveal-card">
+          <div class="reveal-label">New Fighter</div>
+          <h3 id="revealName">Freddy</h3>
+          <div class="reveal-meta">
+            <span id="revealUniverse">Five Nights at Freddy's</span>
+            <span id="revealRarity">Common</span>
+          </div>
+          <div class="reveal-stat-line">
+            <span>HP</span>
+            <strong id="revealHp">0</strong>
+          </div>
+          <div class="reveal-stat-line">
+            <span>ATK</span>
+            <strong id="revealAttack">0</strong>
+          </div>
         </div>
-        <div id="packList" class="pack-list"></div>
-      </aside>
-    </main>
-
-    <section class="panel collection-panel">
-      <div class="panel-header collection-header">
-        <h2>Collection</h2>
       </div>
-      <div id="collectionList" class="collection-grid"></div>
-    </section>
-  </div>
+    </div>
 
-  <div id="toast" class="toast"></div>
-  <script src="script.js"></script>
-</body>
+    <div id="toast" class="toast"></div>
+    <script src="script.js"></script>
+  </body>
 </html>
